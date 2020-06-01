@@ -24,11 +24,12 @@ def dist(v1, v2):
     return np.linalg.norm(v1, -v2)
 
 
-# 加载数据集
+'''加载数据集'''
 trainImages, trainLabels = loadMnist('../MNIST')
 
 
 def knn(test, k):
+    '''knn分类算法'''
     # 分离k个邻居
     neighbors = []
     # 逐个计算距离
@@ -44,3 +45,17 @@ def knn(test, k):
     for n in neighbors:
         labels[n[1]] = labels.get(n[1], 0) + 1
     return max(labels)
+
+
+'''测试集分类'''
+testImages, testLabels = loadMnist('../MNIST', 't10k')
+k = int(input('Please enter the value of K:'))
+knnLabels = np.array([knn(x, k) for x in testImages])
+
+'''计算准确率'''
+trueNum = 0
+for n in range(len(knnLabels)):
+    if knnLabels[n] == testLabels[n]:
+        trueNum += 1
+accuracy = trueNum/len(testLabels)
+print('Accuracy: %.5f' % accuracy)
