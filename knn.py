@@ -5,27 +5,27 @@ import numpy as np
 
 def loadMnist(path, kind='train'):
     '''加载mnist数据集'''
-    labelsPath = os.path.join(path, '%s-labels-idx3-ubyte' % kind)
+    labelsPath = os.path.join(path, '%s-labels-idx1-ubyte' % kind)
     imagesPath = os.path.join(path, '%s-images-idx3-ubyte' % kind)
 
     with open(labelsPath, 'rb') as lp:
         magic, n = struct.unpack('>II', lp.read(8))
-        labels = np.fromfile(lp, dtype=np.unit8)
+        labels = np.fromfile(lp, dtype=np.uint8)
 
     with open(imagesPath, 'rb') as ip:
         magic, num, rows, cols = struct.unpack('>IIII', ip.read(16))
-        images = np.fromfile(ip, dtype=np.unit8).reshape(len(labels), 784)
+        images = np.fromfile(ip, dtype=np.uint8).reshape(len(labels), 784)
 
     return images, labels
 
 
 def dist(v1, v2):
     '''计算欧氏距离'''
-    return np.linalg.norm(v1, -v2)
+    return np.linalg.norm(v1 - v2)
 
 
 '''加载数据集'''
-trainImages, trainLabels = loadMnist('../MNIST')
+trainImages, trainLabels = loadMnist('./')
 
 
 def knn(test, k):
@@ -33,8 +33,9 @@ def knn(test, k):
     # 分离k个邻居
     neighbors = []
     # 逐个计算距离
-    for x, y in trainImages, trainLabels:
-        neighbors.append((dist(test, x), y))
+    for x, y in zip(trainImages, trainLabels):
+        d = dist(x, test)
+        neighbors.append((d, y))
     # 按照距离排序
     neighbors.sort(key=lambda x: x[0])
     # 切片k个邻居
@@ -43,13 +44,15 @@ def knn(test, k):
     # 统计标签
     labels = {}
     for n in neighbors:
-        labels[n[1]] = labels.get(n[1], 0) + 1
+        l = n[1]
+        labels[l] = labels.get(l, 0) + 1
+    print(max(labels))
     return max(labels)
 
 
 '''测试集分类'''
 testImages, testLabels = loadMnist('../MNIST', 't10k')
-k = int(input('Please enter the value of K:'))
+k = int(input('Please enter the value of K: '))
 knnLabels = np.array([knn(x, k) for x in testImages])
 
 '''计算准确率'''
