@@ -51,7 +51,7 @@ def knn(test, k):
 
 
 '''测试集分类'''
-testImages, testLabels = loadMnist('../MNIST', 't10k')
+testImages, testLabels = loadMnist('./', 't10k')
 k = int(input('Please enter the value of K: '))
 knnLabels = np.array([knn(x, k) for x in testImages])
 
