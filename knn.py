@@ -21,7 +21,7 @@ def loadMnist(path, kind='train'):
 
 def dist(v1, v2):
     '''计算欧氏距离'''
-    return np.linalg.norm(v1 - v2)
+    return np.linalg.norm(v2-v1)
 
 
 '''加载数据集'''
@@ -46,12 +46,13 @@ def knn(test, k):
     for n in neighbors:
         l = n[1]
         labels[l] = labels.get(l, 0) + 1
-    print(max(labels))
-    return max(labels)
+    print('Predict:', max(labels, key=labels.get))
+    return max(labels, key=labels.get)
 
 
 '''测试集分类'''
-testImages, testLabels = loadMnist('../MNIST', 't10k')
+testImages, testLabels = loadMnist('./', 't10k')  # 测试集读取
+testImages, testLabels = testImages[:50], testLabels[:50]  # 测试集切片
 k = int(input('Please enter the value of K: '))
 knnLabels = np.array([knn(x, k) for x in testImages])
 
@@ -61,4 +62,4 @@ for n in range(len(knnLabels)):
     if knnLabels[n] == testLabels[n]:
         trueNum += 1
 accuracy = trueNum/len(testLabels)
-print('Accuracy: %.5f' % accuracy)
+print('Accuracy: %.3f%%' % (accuracy*100))
