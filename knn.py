@@ -25,7 +25,7 @@ def dist(v1, v2):
 
 
 '''加载数据集'''
-trainImages, trainLabels = loadMnist('./')
+trainImages, trainLabels = loadMnist('./mnist')
 
 
 def knn(test, k):
@@ -51,8 +51,8 @@ def knn(test, k):
 
 
 '''测试集分类'''
-testImages, testLabels = loadMnist('./', 't10k')  # 测试集读取
-testImages, testLabels = testImages[:50], testLabels[:50]  # 测试集切片
+testImages, testLabels = loadMnist('./mnist', 't10k')  # 测试集读取
+testImages, testLabels = testImages[:1000], testLabels[:1000]  # 测试集切片
 k = int(input('Please enter the value of K: '))
 knnLabels = np.array([knn(x, k) for x in testImages])
 
